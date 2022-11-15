@@ -15,6 +15,12 @@ model Program {
     createdAt DateTime @default(now())
 }
 
+model Document {
+    id Int @id @default(autoincrement())
+    name String? @db.VarChar(255)
+    fileUrl String? @db.VarChar(250)
+}
+
 model Profile {
     id        Int      @id @default(autoincrement())
     email     String   @unique
