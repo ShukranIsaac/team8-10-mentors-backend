@@ -7,10 +7,24 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Mentor {
+model Program {
+    id        Int      @id @default(autoincrement())
+    name      String?  @db.VarChar(255)
+    about     String?  @db.VarChar(255)
+    imageUrl  String?  @db.VarChar(250)
+    createdAt DateTime @default(now())
+}
+
+model Profile {
     id        Int      @id @default(autoincrement())
     email     String   @unique
-    firstname String?
-    lastname  String?
+    firstname String?  @db.VarChar(40)
+    lastname  String?  @db.VarChar(40)
+    imageUrl  String?  @db.VarChar(255)
+    title     String?  @db.VarChar(100)
+    summary   String?  @db.VarChar(255)
+    website   String?  @db.VarChar(45)
+    country   String?  @db.VarChar(50)
+    city      String?  @db.VarChar(50)
     createdAt DateTime @default(now())
 }
