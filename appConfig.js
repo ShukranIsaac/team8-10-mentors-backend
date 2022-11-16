@@ -10,6 +10,9 @@ const cors = require('cors')
 const logger = require('morgan')
 const rfs = require('rotating-file-stream')
 
+const swaggerUi = require('swagger-ui-express')
+const swaggerFile = require('./swagger.json')
+
 const app = express()
 const corsOptions = { origin: process.env.ALLOW_ORIGIN }
 app.use(cors(corsOptions))
@@ -23,5 +26,6 @@ app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 // app.use(routes)
+app.use('/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
 module.exports = app
