@@ -4,6 +4,7 @@
   "description": "Mentor Management System",
   "main": "index.js",
   "scripts": {
+    "build": "node .",
     "test": "test"
   },
   "keywords": [

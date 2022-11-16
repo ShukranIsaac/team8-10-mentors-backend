@@ -8,11 +8,26 @@ datasource db {
 }
 
 model Program {
-    id        Int      @id @default(autoincrement())
-    name      String?  @db.VarChar(255)
-    about     String?  @db.VarChar(255)
-    imageUrl  String?  @db.VarChar(250)
-    createdAt DateTime @default(now())
+    id             Int              @id @default(autoincrement())
+    name           String?          @db.VarChar(255)
+    about          String?          @db.VarChar(255)
+    imageUrl       String?          @db.VarChar(250)
+    createdAt      DateTime         @default(now())
+    ProfileProgram ProfileProgram[]
+}
+
+model ProfileProgram {
+    user       Profile  @relation(fields: [userId], references: [id])
+    userId     Int // relation scalar field (used in the `@relation` attribute above)
+    program    Program  @relation(fields: [programId], references: [id])
+    programId  Int // relation scalar field (used in the `@relation` attribute above)
+    assignedAt DateTime @default(now())
+    assignedBy String
+    @@id([userId, programId])
+}
+
+model Report {
+    id Int @id @default(autoincrement())
 }
 
 model Document {
@@ -24,8 +39,10 @@ model Document {
 }
 
 model Proficiency {
-    id   Int     @id @default(autoincrement())
-    name String? @db.VarChar(100)
+    id     Int     @id @default(autoincrement())
+    name   String? @db.VarChar(100)
+    user   Profile @relation(fields: [userId], references: [id])
+    userId Int
 }
 
 model Role {
@@ -34,17 +51,21 @@ model Role {
 }
 
 model Social {
-    id   Int     @id @default(autoincrement())
-    name String? @db.VarChar(100)
-    url  String? @db.VarChar(100)
+    id     Int     @id @default(autoincrement())
+    name   String? @db.VarChar(100)
+    url    String? @db.VarChar(100)
+    user   Profile @relation(fields: [userId], references: [id])
+    userId Int
 }
 
 model Task {
-    id          Int     @id @default(autoincrement())
-    title       String? @db.VarChar(50)
-    description String? @db.VarChar(255)
-    status      Status  @default(UN_ASSIGNED)
-    completed   Boolean @default(false)
+    id          Int      @id @default(autoincrement())
+    title       String?  @db.VarChar(50)
+    description String?  @db.VarChar(255)
+    status      Status   @default(UN_ASSIGNED)
+    completed   Boolean  @default(false)
+    user        Profile? @relation(fields: [userId], references: [id])
+    userId      Int?
 }
 
 enum Status {
@@ -55,16 +76,20 @@ enum Status {
 }
 
 model Profile {
-    id        Int        @id @default(autoincrement())
-    email     String     @unique
-    firstname String?    @db.VarChar(40)
-    lastname  String?    @db.VarChar(40)
-    imageUrl  String?    @db.VarChar(255)
-    title     String?    @db.VarChar(100)
-    summary   String?    @db.VarChar(255)
-    website   String?    @db.VarChar(45)
-    country   String?    @db.VarChar(50)
-    city      String?    @db.VarChar(50)
-    createdAt DateTime   @default(now())
-    Document  Document[]
+    id             Int              @id @default(autoincrement())
+    email          String           @unique
+    firstname      String?          @db.VarChar(40)
+    lastname       String?          @db.VarChar(40)
+    imageUrl       String?          @db.VarChar(255)
+    title          String?          @db.VarChar(100)
+    summary        String?          @db.VarChar(255)
+    website        String?          @db.VarChar(45)
+    country        String?          @db.VarChar(50)
+    city           String?          @db.VarChar(50)
+    createdAt      DateTime         @default(now())
+    Document       Document[]
+    Task           Task[]
+    Social         Social[]
+    Proficiency    Proficiency[]
+    ProfileProgram ProfileProgram[]
 }
