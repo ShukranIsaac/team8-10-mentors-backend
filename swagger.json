@@ -2,7 +2,7 @@
     "swagger": "2.0",
     "info": {
         "version": "1.0.0",
-        "title": "MMS - Mentor Management System",
+        "title": "MMS8-10 - Mentor Management System",
         "description": "MMS is an open source project that is aimed at developing a system for managing mentors in various programs at Andela and its Community",
         "license": {
             "name": "MIT",
