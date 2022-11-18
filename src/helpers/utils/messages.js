@@ -39,6 +39,16 @@ messages.isDuplicate = (headers, statusCode, data) => ({
     },
 })
 
+messages.recordExists = (headers, statusCode, key, data) => ({
+    headers,
+    statusCode,
+    data: {
+        status: 'CONFLICT',
+        message: `The system did not process the request. ${ key } already exists`,
+        data: data,
+    },Conflict
+})
+
 messages.recordNotFound = (headers, statusCode, data) => ({
     headers,
     statusCode,

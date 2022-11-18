@@ -1,5 +1,6 @@
 const message = require('../../helpers/utils/messages')
 const responseCode = require('../../helpers/utils/responseCode')
+const { excludeKeys } = require('./profile.exclude')
 
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
@@ -7,20 +8,30 @@ const prisma = new PrismaClient()
 const controller = function ({ }) {
     const addOneProfile = async ({ data }) => {
         try {
-            const result = await prisma.profile.create({
-                data
-            })
+            const userExists = prisma.$exists.user({ email: data.email })
+            if (!userExists) {
+                const result = await prisma.user.create({
+                    data
+                })
 
-            if (result) {
-                return message.successResponse(
-                    { 'Content-Type': 'application/json' },
-                    responseCode.success,
-                    result
-                )
+                if (result) {
+                    return message.successResponse(
+                        { 'Content-Type': 'application/json' },
+                        responseCode.success,
+                        excludeKeys(result, ['password'])
+                    )
+                } else {
+                    return message.badRequest(
+                        { 'Content-Type': 'application/json' },
+                        responseCode.badRequest,
+                        {}
+                    )
+                }
             } else {
-                return message.badRequest(
+                return message.recordExists(
                     { 'Content-Type': 'application/json' },
                     responseCode.badRequest,
+                    data.email,
                     {}
                 )
             }
@@ -35,9 +46,9 @@ const controller = function ({ }) {
 
     const findProfileById = async (profileId) => {
         try {
-            const result = await prisma.profile.findUnique({
-                where: { 
-                    id: Number(profileId) 
+            const result = await prisma.user.findUnique({
+                where: {
+                    id: Number(profileId)
                 }
             })
 
@@ -45,7 +56,7 @@ const controller = function ({ }) {
                 return message.successResponse(
                     { 'Content-Type': 'application/json' },
                     responseCode.success,
-                    result
+                    excludeKeys(result, ['password'])
                 )
             } else {
                 return message.recordNotFound(
@@ -65,13 +76,13 @@ const controller = function ({ }) {
 
     const findAllProfiles = async ({ data }) => {
         try {
-            const result = await prisma.profile.findMany()
+            const result = await prisma.user.findMany()
 
             if (result) {
                 return message.successResponse(
                     { 'Content-Type': 'application/json' },
                     responseCode.success,
-                    result
+                    excludeKeys(result, ['password'])
                 )
             } else {
                 return message.badRequest(
@@ -91,7 +102,7 @@ const controller = function ({ }) {
 
     const updateProfile = async ({ data }) => {
         try {
-            const result = await prisma.profile.update({
+            const result = await prisma.user.update({
                 data
             })
 
@@ -99,7 +110,7 @@ const controller = function ({ }) {
                 return message.successResponse(
                     { 'Content-Type': 'application/json' },
                     responseCode.success,
-                    result
+                    excludeKeys(result, ['password'])
                 )
             } else {
                 return message.badRequest(
