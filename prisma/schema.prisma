@@ -9,16 +9,16 @@ datasource db {
 }
 
 model Program {
-    id             Int              @id @default(autoincrement())
-    name           String?          @db.VarChar(255)
-    about          String?          @db.VarChar(255)
-    imageUrl       String?          @db.VarChar(250)
-    createdAt      DateTime         @default(now())
-    ProfileProgram ProfileProgram[]
+    id          Int           @id @default(autoincrement())
+    name        String?       @db.VarChar(255)
+    about       String?       @db.VarChar(255)
+    imageUrl    String?       @db.VarChar(250)
+    createdAt   DateTime      @default(now())
+    UserProgram UserProgram[]
 }
 
-model ProfileProgram {
-    user       Profile  @relation(fields: [userId], references: [id])
+model UserProgram {
+    user       User     @relation(fields: [userId], references: [id])
     userId     Int // relation scalar field (used in the `@relation` attribute above)
     program    Program  @relation(fields: [programId], references: [id])
     programId  Int // relation scalar field (used in the `@relation` attribute above)
@@ -36,29 +36,50 @@ model Document {
     id      Int     @id @default(autoincrement())
     name    String? @db.VarChar(255)
     fileUrl String? @db.VarChar(250)
-    user    Profile @relation(fields: [userId], references: [id])
+    user    User    @relation(fields: [userId], references: [id])
     userId  Int
 }
 
 model Proficiency {
     id     Int     @id @default(autoincrement())
     name   String? @db.VarChar(100)
-    user   Profile @relation(fields: [userId], references: [id])
+    user   User    @relation(fields: [userId], references: [id])
     userId Int
 }
 
 model Role {
-    id     Int     @id @default(autoincrement())
-    name   String? @db.VarChar(100)
-    user   Profile @relation(fields: [userId], references: [id])
-    userId Int
+    id        Int         @id @default(autoincrement())
+    name      String?     @db.VarChar(100)
+    userId    Int
+    UserGroup UserGroup[]
+    UserRole  UserRole[]
+}
+
+model UserGroup {
+    role      Role     @relation(fields: [roleId], references: [id])
+    roleId    Int // relation scalar field (used in the `@relation` attribute above)
+    group     Group    @relation(fields: [groupId], references: [id])
+    groupId   Int // relation scalar field (used in the `@relation` attribute above)
+    createdAt DateTime @default(now())
+    createdBy String   @db.VarChar(100)
+    User      User?    @relation(fields: [userId], references: [id])
+    userId    Int?
+
+    @@id([roleId, groupId])
+}
+
+model Group {
+    id          Int         @id @default(autoincrement())
+    name        String?     @db.VarChar(100)
+    description String?     @db.VarChar(200)
+    UserGroup   UserGroup[]
 }
 
 model Social {
     id     Int     @id @default(autoincrement())
     name   String? @db.VarChar(100)
     url    String? @db.VarChar(100)
-    user   Profile @relation(fields: [userId], references: [id])
+    user   User    @relation(fields: [userId], references: [id])
     userId Int
 }
 
@@ -68,8 +89,9 @@ model Task {
     description String?  @db.VarChar(255)
     status      Status   @default(UN_ASSIGNED)
     completed   Boolean  @default(false)
-    user        Profile? @relation(fields: [userId], references: [id])
+    user        User?    @relation(fields: [userId], references: [id])
     userId      Int?
+    createdAt   DateTime @default(now())
 }
 
 enum Status {
@@ -79,22 +101,34 @@ enum Status {
     ASSIGNED
 }
 
-model Profile {
-    id             Int              @id @default(autoincrement())
-    email          String           @unique
-    firstname      String?          @db.VarChar(40)
-    lastname       String?          @db.VarChar(40)
-    imageUrl       String?          @db.VarChar(255)
-    title          String?          @db.VarChar(100)
-    summary        String?          @db.VarChar(255)
-    website        String?          @db.VarChar(45)
-    country        String?          @db.VarChar(50)
-    city           String?          @db.VarChar(50)
-    createdAt      DateTime         @default(now())
-    Document       Document[]
-    Task           Task[]
-    Social         Social[]
-    Proficiency    Proficiency[]
-    ProfileProgram ProfileProgram[]
-    Role           Role[]
+model UserRole {
+    user       User     @relation(fields: [userId], references: [id])
+    userId     Int // relation scalar field (used in the `@relation` attribute above)
+    role       Role     @relation(fields: [roleId], references: [id])
+    roleId     Int // relation scalar field (used in the `@relation` attribute above)
+    assignedAt DateTime @default(now())
+    assignedBy String
+
+    @@id([userId, roleId])
+}
+
+model User {
+    id          Int           @id @default(autoincrement())
+    email       String        @unique
+    firstname   String?       @db.VarChar(40)
+    lastname    String?       @db.VarChar(40)
+    imageUrl    String?       @db.VarChar(255)
+    title       String?       @db.VarChar(100)
+    summary     String?       @db.VarChar(255)
+    website     String?       @db.VarChar(45)
+    country     String?       @db.VarChar(50)
+    city        String?       @db.VarChar(50)
+    createdAt   DateTime      @default(now())
+    Document    Document[]
+    Task        Task[]
+    Social      Social[]
+    Proficiency Proficiency[]
+    UserProgram UserProgram[]
+    UserRole    UserRole[]
+    UserGroup   UserGroup[]
 }
