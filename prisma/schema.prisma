@@ -37,13 +37,13 @@ model Report {
     userId      Int
     isPublished Boolean       @default(value: false)
     publishAt   DateTime?
-    status      ReportStatus? @default(value: PUBLIC)
+    status      ReportStatus? @default(value: PRIVATE_DRAFT)
 }
 
 enum ReportStatus {
     PUBLIC
     PRIVATE
-    DRAFT
+    PRIVATE_DRAFT
     PUBLISHED
     IN_REVIEW
 }
