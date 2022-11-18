@@ -8,8 +8,17 @@ const prisma = new PrismaClient()
 const controller = function ({ }) {
     const addOneProfile = async ({ data }) => {
         try {
-            const userExists = prisma.$exists.user({ email: data.email })
-            if (!userExists) {
+            const count = await prisma.user.count({
+                where: {
+                    email: {
+                        equals: data.email,
+                    },
+                }
+            })
+
+            console.log(count)
+
+            if (!(count > 0)) {
                 const result = await prisma.user.create({
                     data
                 })
@@ -30,7 +39,7 @@ const controller = function ({ }) {
             } else {
                 return message.recordExists(
                     { 'Content-Type': 'application/json' },
-                    responseCode.badRequest,
+                    responseCode.conflict,
                     data.email,
                     {}
                 )

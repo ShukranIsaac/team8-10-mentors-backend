@@ -44,9 +44,9 @@ messages.recordExists = (headers, statusCode, key, data) => ({
     statusCode,
     data: {
         status: 'CONFLICT',
-        message: `The system did not process the request. ${ key } already exists`,
+        message: `The system did not process the request. User with ${ key } already exists.`,
         data: data,
-    },Conflict
+    },
 })
 
 messages.recordNotFound = (headers, statusCode, data) => ({
