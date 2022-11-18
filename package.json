@@ -1,10 +1,10 @@
 {
-  "name": "team10-mentors-backend",
+  "name": "team8-10-mentors-backend",
   "version": "1.0.0",
   "description": "Mentor Management System",
   "main": "index.js",
   "scripts": {
-    "build": "node .",
+    "start": "nodemon .",
     "test": "test"
   },
   "keywords": [
@@ -21,6 +21,21 @@
     "prisma": "^4.6.1"
   },
   "dependencies": {
-    "@prisma/client": "^4.6.1"
+    "@prisma/client": "^4.6.1",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "express-rate-limit": "^6.7.0",
+    "helmet": "^6.0.0",
+    "joi": "^17.7.0",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.20",
+    "path": "^0.12.7",
+    "rotating-file-stream": "^3.0.4",
+    "swagger-autogen": "^2.22.0",
+    "swagger-ui-express": "^4.6.0",
+    "uuid-v4": "^0.1.0"
   }
 }
