@@ -109,17 +109,22 @@ const controller = function ({ }) {
         }
     }
 
-    const updateProfile = async ({ data }) => {
+    const updateProfile = async (profileId, data) => {
+        console.log(data.body)
         try {
-            const result = await prisma.user.update({
-                data
+            const upsertUser = await prisma.user.upsert({
+                where: {
+                    id: Number(profileId),
+                },
+                update: { ...data.body },
+                create: { ...data.body },
             })
 
-            if (result) {
+            if (upsertUser) {
                 return message.successResponse(
                     { 'Content-Type': 'application/json' },
                     responseCode.success,
-                    excludeKeys(result, ['password'])
+                    excludeKeys(upsertUser, ['password'])
                 )
             } else {
                 return message.badRequest(

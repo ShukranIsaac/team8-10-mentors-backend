@@ -32,7 +32,7 @@ router.get('/profiles/:id', async (req, res, next) => {
 const updateProfile = async (req, res, next) => {
     const request = adaptRequest(req)
 
-    profileController.findProfileById(request.pathParams.id)
+    profileController.updateProfile(request.pathParams.id, request)
         .then((result) => sendResponse(res, result))
         .catch((e) => sendResponse(res, e))
 }
