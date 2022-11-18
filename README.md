@@ -15,3 +15,5 @@
 - Deploy
 
 # Project Latest DB Schema
+**Generated with Prisma Migrations and MYSQL Workbench Reverse Engineering:**
+
