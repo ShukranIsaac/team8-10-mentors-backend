@@ -1,6 +1,6 @@
 const message = require('../../helpers/utils/messages')
 const responseCode = require('../../helpers/utils/responseCode')
-const { excludeKeys } = require('./profile.exclude')
+const { excludeKeys } = require('../../helpers/utils/common')
 
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
@@ -110,7 +110,6 @@ const controller = function ({ }) {
     }
 
     const updateProfile = async (profileId, data) => {
-        console.log(data.body)
         try {
             const upsertUser = await prisma.user.upsert({
                 where: {
