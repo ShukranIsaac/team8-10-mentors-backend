@@ -6,7 +6,7 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
 const controller = function ({ }) {
-    const exists = async (key, value) => await prisma.user.count({
+    const exists = async (key, value) => await prisma.role.count({
         where: {
             [key]: {
                 equals: value,
@@ -14,12 +14,12 @@ const controller = function ({ }) {
         }
     })
 
-    const addOneProfile = async ({ data }) => {
+    const addOneRole = async ({ data }) => {
         try {
-            const count = await exists('email', data.email)
+            const count = await exists('name', data.name)
 
             if (!(count > 0)) {
-                const result = await prisma.user.create({
+                const result = await prisma.role.create({
                     data
                 })
 
@@ -27,7 +27,7 @@ const controller = function ({ }) {
                     return message.successResponse(
                         { 'Content-Type': 'application/json' },
                         responseCode.success,
-                        excludeKeys(result, ['password'])
+                        result
                     )
                 } else {
                     return message.badRequest(
@@ -53,11 +53,11 @@ const controller = function ({ }) {
         }
     }
 
-    const findProfileById = async (profileId) => {
+    const findRoleById = async (roleId) => {
         try {
-            const result = await prisma.user.findUnique({
+            const result = await prisma.role.findUnique({
                 where: {
-                    id: Number(profileId)
+                    id: Number(roleId)
                 }
             })
 
@@ -65,7 +65,7 @@ const controller = function ({ }) {
                 return message.successResponse(
                     { 'Content-Type': 'application/json' },
                     responseCode.success,
-                    excludeKeys(result, ['password'])
+                    result
                 )
             } else {
                 return message.recordNotFound(
@@ -83,15 +83,15 @@ const controller = function ({ }) {
         }
     }
 
-    const findAllProfiles = async ({ data }) => {
+    const findAllRoles = async ({ data }) => {
         try {
-            const result = await prisma.user.findMany()
+            const result = await prisma.role.findMany()
 
             if (result) {
                 return message.successResponse(
                     { 'Content-Type': 'application/json' },
                     responseCode.success,
-                    excludeKeys(result, ['password'])
+                    result
                 )
             } else {
                 return message.badRequest(
@@ -109,11 +109,11 @@ const controller = function ({ }) {
         }
     }
 
-    const updateProfile = async (profileId, data) => {
+    const updateRole = async (roleId, data) => {
         try {
-            const upsertUser = await prisma.user.upsert({
+            const upsertUser = await prisma.role.upsert({
                 where: {
-                    id: Number(profileId),
+                    id: Number(roleId),
                 },
                 update: { ...data.body },
                 create: { ...data.body },
@@ -123,7 +123,7 @@ const controller = function ({ }) {
                 return message.successResponse(
                     { 'Content-Type': 'application/json' },
                     responseCode.success,
-                    excludeKeys(upsertUser, ['password'])
+                    upsertUser
                 )
             } else {
                 return message.badRequest(
@@ -141,17 +141,17 @@ const controller = function ({ }) {
         }
     }
 
-    const deleteProfile = async (profileId) => {
+    const deleteRole = async (roleId) => {
         try {
-            const result = await prisma.user.delete({
-                where: { id: Number(profileId) }
+            const result = await prisma.role.delete({
+                where: { id: Number(roleId) }
             })
 
             if (result) {
                 return message.successResponse(
                     { 'Content-Type': 'application/json' },
                     responseCode.success,
-                    excludeKeys(result, ['password'])
+                    result
                 )
             } else {
                 return message.badRequest(
@@ -170,11 +170,11 @@ const controller = function ({ }) {
     }
 
     return Object.freeze({
-        addOneProfile,
-        findAllProfiles,
-        findProfileById,
-        updateProfile,
-        deleteProfile
+        addOneRole,
+        findAllRoles,
+        findRoleById,
+        updateRole,
+        deleteRole,
     })
 }
 

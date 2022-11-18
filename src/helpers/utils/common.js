@@ -30,8 +30,17 @@ const randomNumber = (length = 4) => {
  */
 const replaceAll = (string, search, replace) => string.split(search).join(replace)
 
+// Exclude keys from user
+const excludeKeys = function excludeKeys(model, keys = []) {
+    for (let key of keys) {
+        delete model[key]
+    }
+    return model
+}
+
 module.exports = {
     convertObjectToEnum,
     randomNumber,
     replaceAll,
+    excludeKeys
 }
