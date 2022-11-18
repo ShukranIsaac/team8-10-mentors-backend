@@ -29,4 +29,23 @@ router.get('/profiles/:id', async (req, res, next) => {
         .catch((e) => sendResponse(res, e))
 })
 
+const updateProfile = async (req, res, next) => {
+    const request = adaptRequest(req)
+
+    profileController.findProfileById(request.pathParams.id)
+        .then((result) => sendResponse(res, result))
+        .catch((e) => sendResponse(res, e))
+}
+
+router.put('/profiles/:id', async (req, res, next) => updateProfile(req, res, next))
+    .patch('/profiles/:id', async (req, res, next) => updateProfile(req, res, next))
+
+router.delete('/profiles/:id', async (req, res, next) => {
+    const request = adaptRequest(req)
+
+    profileController.deleteProfile(request.pathParams.id)
+        .then((result) => sendResponse(res, result))
+        .catch((e) => sendResponse(res, e))
+})
+
 module.exports = router

@@ -6,17 +6,17 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
 const controller = function ({ }) {
+    const exists = async (key, value) => await prisma.user.count({
+        where: {
+            [key]: {
+                equals: value,
+            },
+        }
+    })
+
     const addOneProfile = async ({ data }) => {
         try {
-            const count = await prisma.user.count({
-                where: {
-                    email: {
-                        equals: data.email,
-                    },
-                }
-            })
-
-            console.log(count)
+            const count = await exists('email', data.email)
 
             if (!(count > 0)) {
                 const result = await prisma.user.create({
@@ -137,11 +137,40 @@ const controller = function ({ }) {
         }
     }
 
+    const deleteProfile = async (profileId) => {
+        try {
+            const result = await prisma.user.delete({
+                where: { id: Number(profileId) }
+            })
+
+            if (result) {
+                return message.successResponse(
+                    { 'Content-Type': 'application/json' },
+                    responseCode.success,
+                    excludeKeys(result, ['password'])
+                )
+            } else {
+                return message.badRequest(
+                    { 'Content-Type': 'application/json' },
+                    responseCode.badRequest,
+                    {}
+                )
+            }
+        } catch (error) {
+            return message.failureResponse(
+                { 'Content-Type': 'application/json' },
+                responseCode.internalServerError,
+                error.message
+            )
+        }
+    }
+
     return Object.freeze({
         addOneProfile,
         findAllProfiles,
         findProfileById,
         updateProfile,
+        deleteProfile
     })
 }
 
