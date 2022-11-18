@@ -13,3 +13,8 @@
 - Run tests
 - Build
 - Deploy
+
+# Project Latest DB Schema
+**Generated with Prisma Migrations and MYSQL Workbench Reverse Engineering:**
+
+![schema_mentors](https://user-images.githubusercontent.com/20222220/202723068-ae21f5fe-7c50-4d7d-bd05-4571bfb9865d.png)

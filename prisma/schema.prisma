@@ -29,15 +29,16 @@ model UserProgram {
 }
 
 model Report {
-    id          Int           @id @default(autoincrement())
-    name        String?       @db.VarChar(255)
-    startAt     DateTime      @default(now())
-    endAt       DateTime      @default(now())
-    user        User          @relation(fields: [userId], references: [id])
-    userId      Int
-    isPublished Boolean       @default(value: false)
-    publishAt   DateTime?
-    status      ReportStatus? @default(value: PRIVATE_DRAFT)
+    id            Int             @id @default(autoincrement())
+    name          String?         @db.VarChar(255)
+    startAt       DateTime        @default(now())
+    endAt         DateTime        @default(now())
+    user          User            @relation(fields: [userId], references: [id])
+    userId        Int
+    isPublished   Boolean         @default(value: false)
+    publishAt     DateTime?
+    status        ReportStatus?   @default(value: PRIVATE_DRAFT)
+    ReportSection ReportSection[]
 }
 
 enum ReportStatus {
@@ -53,6 +54,9 @@ model ReportSection {
     name        String?  @db.VarChar(255)
     description String?  @db.VarChar(500)
     createdAt   DateTime @default(now())
+    report      Report   @relation(fields: [reportId], references: [id])
+    reportId    Int
+    order       Int // order in which they should appear in the report.
 }
 
 model Document {
